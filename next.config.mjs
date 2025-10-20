@@ -1,11 +1,13 @@
+// Arquivo: next.config.mjs
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  typescript: {
-    ignoreBuildErrors: true,
+  // Adicione este bloco para desativar o streaming
+  experimental: {
+    serverComponentsExternalPackages: ["@react-email/components"],
+    ppr: false, // Desativa o Prerendering Parcial, que usa streaming
   },
-  images: {
-    unoptimized: true,
-  },
-}
+};
 
-export default nextConfig
+export default nextConfig;
+
