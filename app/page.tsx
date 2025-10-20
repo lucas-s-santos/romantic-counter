@@ -24,7 +24,7 @@ const playlist = [
 
 export default function Home() {
   const [showMain, setShowMain] = useState(false)
-  const audioRef = useRef<HTMLAudioElement>(null)
+  const audioRef = useRef<HTMLAudioElement | null>(null)
   const [userInteracted, setUserInteracted] = useState(false)
   const [currentTrackIndex, setCurrentTrackIndex] = useState(0)
 

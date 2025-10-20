@@ -1,13 +1,8 @@
-// Arquivo: next.config.mjs
+// Arquivo: next.config.mjs (versão limpa para a Vercel)
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Adicione este bloco para desativar o streaming
-  experimental: {
-    serverComponentsExternalPackages: ["@react-email/components"],
-    ppr: false, // Desativa o Prerendering Parcial, que usa streaming
-  },
+  // Deixe vazio por enquanto
 };
 
 export default nextConfig;
-

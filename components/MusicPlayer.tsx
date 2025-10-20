@@ -8,7 +8,8 @@ import { Button } from "@/components/ui/button"
 
 // A interface agora inclui as funções para controlar a playlist
 interface MusicPlayerProps {
-  audioRef: RefObject<HTMLAudioElement>;
+  audioRef: React.RefObject<HTMLAudioElement>;
+
   trackName: string;
   onNext: () => void;
   onPrev: () => void;
