@@ -1,8 +1,4 @@
-// Arquivo: next.config.mjs (versão limpa para a Vercel)
-
 /** @type {import('next').NextConfig} */
-const nextConfig = {
-  // Deixe vazio por enquanto
-};
+const nextConfig = {};
 
 export default nextConfig;
