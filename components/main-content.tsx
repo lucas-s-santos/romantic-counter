@@ -1,13 +1,16 @@
-// Arquivo: components/main-content.tsx (VERSÃO ATUALIZADA COM CONTADOR REGRESSIVO)
+// Arquivo: components/main-content.tsx (VERSÃO FINAL COM CONFETES E NOVA FONTE)
 "use client"
 
+// 1. IMPORTAÇÕES NECESSÁRIAS
 import { useEffect, useState } from "react"
+
+import Confetti from 'react-confetti' // Para o efeito de confetes
 import { PhotoCarousel } from "@/components/photo-carousel"
 import { Calendar } from "@/components/calendar"
 import { Heart } from "lucide-react"
+import { cormorant } from "@/app/layout" // Para a nova fonte do título
 
-// --- 1. NOVO COMPONENTE DO CONTADOR REGRESSIVO ---
-// Este componente calcula e exibe o tempo restante para o próximo aniversário de namoro.
+// Componente do Contador Regressivo (mantido como estava)
 function CountdownCard() {
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
 
@@ -16,8 +19,6 @@ function CountdownCard() {
       const startDate = new Date("2025-06-12T00:00:00");
       const now = new Date();
       let nextAnniversary = new Date(now.getFullYear(), startDate.getMonth(), startDate.getDate());
-
-      // Se a data do aniversário deste ano já passou, calcula para o próximo ano.
       if (now > nextAnniversary) {
         nextAnniversary.setFullYear(now.getFullYear() + 1);
       }
@@ -28,7 +29,6 @@ function CountdownCard() {
       const now = new Date();
       const nextAnniversary = calculateNextAnniversary();
       const difference = nextAnniversary.getTime() - now.getTime();
-
       if (difference > 0) {
         setTimeLeft({
           days: Math.floor(difference / (1000 * 60 * 60 * 24)),
@@ -68,8 +68,7 @@ function CountdownCard() {
   );
 }
 
-
-// Componente para o divisor romântico (mantido do seu código)
+// Componente do Divisor Romântico (mantido como estava)
 function RomanticDivider() {
   return (
     <div className="flex items-center justify-center gap-4 my-8">
@@ -81,7 +80,11 @@ function RomanticDivider() {
 }
 
 export function MainContent() {
-  // Estados para a contagem (mantidos do seu código)
+  // 2. ESTADOS PARA OS CONFETES
+  const [isAnniversary, setIsAnniversary] = useState(false);
+  const [showConfetti, setShowConfetti] = useState(true);
+
+  // Estados para a contagem (mantidos)
   const [years, setYears] = useState(0)
   const [months, setMonths] = useState(0)
   const [days, setDays] = useState(0)
@@ -94,9 +97,18 @@ export function MainContent() {
 
     const updateCounter = () => {
       const now = new Date()
-      const diff = now.getTime() - startDate.getTime()
 
-      // Lógica da contagem (mantida do seu código)
+      // 3. LÓGICA DOS CONFETES
+      // Verifica se hoje é dia 12 e ativa os confetes por 10 segundos.
+      if (now.getDate() === 12 && showConfetti) {
+        setIsAnniversary(true);
+        setTimeout(() => {
+          setShowConfetti(false);
+        }, 10000); // 10 segundos
+      }
+      
+      // Lógica da contagem (mantida)
+      const diff = now.getTime() - startDate.getTime()
       const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
       const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))
       const s = Math.floor((diff % (1000 * 60)) / 1000)
@@ -123,14 +135,24 @@ export function MainContent() {
     const interval = setInterval(updateCounter, 1000)
 
     return () => clearInterval(interval)
-  }, [])
+  }, [showConfetti]) // Adicionado showConfetti às dependências
 
-  // Removi a lógica do tema dinâmico para simplificar, já que não foi solicitada agora.
   return (
     <div className="min-h-screen bg-background">
+      {/* 4. COMPONENTE DOS CONFETES */}
+      {/* Ele só aparece se 'isAnniversary' e 'showConfetti' forem verdadeiros */}
+      {isAnniversary && showConfetti && (
+        <Confetti
+          recycle={false}
+          numberOfPieces={400}
+          gravity={0.1}
+        />
+      )}
+
       <div className="container mx-auto px-4 py-12 md:py-20 space-y-12 max-w-7xl">
         <div className="text-center space-y-4 md:space-y-6 animate-fade-in">
-          <h1 className="text-5xl md:text-8xl font-serif text-balance text-foreground tracking-tight">
+          {/* 5. NOVA FONTE APLICADA AO TÍTULO */}
+          <h1 className={`text-5xl md:text-8xl text-balance tracking-tight text-foreground ${cormorant.className}`}>
             Lucas & Luisa
           </h1>
           <p className="text-sm md:text-lg text-muted-foreground font-light tracking-wider">
@@ -138,10 +160,10 @@ export function MainContent() {
           </p>
         </div>
 
+        {/* O resto do código permanece exatamente o mesmo */}
         <div className="animate-fade-in-up">
             <h2 className="text-2xl font-serif text-center text-foreground/80 mb-8">Nosso Tempo Juntos</h2>
             <div className="grid grid-cols-3 md:grid-cols-6 gap-4 md:gap-6 max-w-4xl mx-auto">
-                {/* Cards de contagem (mantidos do seu código) */}
                 <div className="bg-card/80 backdrop-blur-sm rounded-lg p-4 md:p-6 shadow-sm border border-border/50 text-center">
                     <div className="text-4xl md:text-6xl font-serif text-primary mb-2">{years}</div>
                     <div className="text-xs text-muted-foreground uppercase tracking-widest">Anos</div>
@@ -175,7 +197,6 @@ export function MainContent() {
           className="flex flex-col lg:flex-row gap-8 lg:gap-16 items-start animate-fade-in-up"
           style={{ animationDelay: "0.2s" }}
         >
-          {/* Seção "Nossa História" (mantida do seu código) */}
           <div className="w-full lg:w-1/2 bg-card rounded-lg p-8 md:p-10 shadow-sm border border-border">
             <h2 className="text-3xl md:text-4xl font-serif text-foreground mb-6 md:mb-8 text-center lg:text-left tracking-tight">
               Nossa História
@@ -214,13 +235,10 @@ export function MainContent() {
           </div>
         </div>
 
-        {/* --- 2. LAYOUT ATUALIZADO PARA O CALENDÁRIO E O CONTADOR --- */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center animate-fade-in-up" style={{ animationDelay: "0.4s" }}>
-          {/* Coluna do Calendário */}
           <div>
             <Calendar />
           </div>
-          {/* Coluna do Contador Regressivo */}
           <div className="w-full">
             <CountdownCard />
           </div>
