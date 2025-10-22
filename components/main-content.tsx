@@ -8,7 +8,9 @@ import Confetti from 'react-confetti' // Para o efeito de confetes
 import { PhotoCarousel } from "@/components/photo-carousel"
 import { Calendar } from "@/components/calendar"
 import { Heart } from "lucide-react"
-import { cormorant } from "@/app/layout" // Para a nova fonte do título
+// No topo do arquivo main-content.tsx
+import { cormorant } from "@/lib/fonts" // Importando do novo arquivo central
+
 
 // Componente do Contador Regressivo (mantido como estava)
 function CountdownCard() {
