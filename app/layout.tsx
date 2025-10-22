@@ -1,12 +1,11 @@
-// Arquivo: app/layout.tsx (VERSÃO FINAL COM FONTES CORRIGIDAS)
+// Arquivo: app/layout.tsx (VERSÃO CORRIGIDA PARA O TEMA)
 import type React from "react"
 import type { Metadata } from "next"
-// --- MUDANÇA AQUI: Trocamos as fontes Geist por Inter e Roboto Mono ---
 import { Inter, Roboto_Mono, Playfair_Display } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
-import "../styles/globals.css" // Garantindo que o CSS correto está sendo importado
+import { ThemeProvider } from "@/components/theme-provider" // Verifique se o caminho está correto
+import "../styles/globals.css"
 
-// --- MUDANÇA AQUI: Inicializamos as novas fontes ---
 const inter = Inter({ subsets: ["latin"] })
 const roboto_mono = Roboto_Mono({ subsets: ["latin"] })
 const playfair = Playfair_Display({ subsets: ["latin"] })
@@ -14,7 +13,6 @@ const playfair = Playfair_Display({ subsets: ["latin"] })
 export const metadata: Metadata = {
   title: "Lucas e Luisa ❤️",
   description: "Um contador especial do nosso relacionamento",
-  generator: "v0.app",
 }
 
 export default function RootLayout({
@@ -23,10 +21,18 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    // --- MUDANÇA AQUI: Usamos a nova fonte 'inter' no corpo da página ---
-    <html lang="pt-BR" className="dark">
+    <html lang="pt-BR" suppressHydrationWarning> {/* suppressHydrationWarning é importante para o next-themes */}
       <body className={inter.className}>
-        {children}
+        {/* --- CORREÇÃO APLICADA AQUI --- */}
+        {/* Agora estamos passando as propriedades necessárias para o ThemeProvider */}
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="dark"
+          enableSystem
+          disableTransitionOnChange
+        >
+          {children}
+        </ThemeProvider>
         <Analytics />
       </body>
     </html>

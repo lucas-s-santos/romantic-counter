@@ -1,3 +1,4 @@
+// Arquivo: components/main-content.tsx (VERSÃO ATUALIZADA COM CONTADOR REGRESSIVO)
 "use client"
 
 import { useEffect, useState } from "react"
@@ -5,7 +6,70 @@ import { PhotoCarousel } from "@/components/photo-carousel"
 import { Calendar } from "@/components/calendar"
 import { Heart } from "lucide-react"
 
-// Componente para o divisor romântico
+// --- 1. NOVO COMPONENTE DO CONTADOR REGRESSIVO ---
+// Este componente calcula e exibe o tempo restante para o próximo aniversário de namoro.
+function CountdownCard() {
+  const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+
+  useEffect(() => {
+    const calculateNextAnniversary = () => {
+      const startDate = new Date("2025-06-12T00:00:00");
+      const now = new Date();
+      let nextAnniversary = new Date(now.getFullYear(), startDate.getMonth(), startDate.getDate());
+
+      // Se a data do aniversário deste ano já passou, calcula para o próximo ano.
+      if (now > nextAnniversary) {
+        nextAnniversary.setFullYear(now.getFullYear() + 1);
+      }
+      return nextAnniversary;
+    };
+
+    const interval = setInterval(() => {
+      const now = new Date();
+      const nextAnniversary = calculateNextAnniversary();
+      const difference = nextAnniversary.getTime() - now.getTime();
+
+      if (difference > 0) {
+        setTimeLeft({
+          days: Math.floor(difference / (1000 * 60 * 60 * 24)),
+          hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
+          minutes: Math.floor((difference / 1000 / 60) % 60),
+          seconds: Math.floor((difference / 1000) % 60),
+        });
+      }
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <div className="bg-card rounded-2xl p-6 shadow-lg border border-border text-center h-full flex flex-col justify-center">
+      <h3 className="text-2xl font-serif text-foreground mb-4">Próximo Aniversário</h3>
+      <p className="text-muted-foreground mb-6">Contagem regressiva para nosso dia especial!</p>
+      <div className="grid grid-cols-4 gap-4">
+        <div>
+          <div className="text-3xl font-bold text-primary">{timeLeft.days}</div>
+          <div className="text-xs text-muted-foreground uppercase">Dias</div>
+        </div>
+        <div>
+          <div className="text-3xl font-bold text-primary">{timeLeft.hours}</div>
+          <div className="text-xs text-muted-foreground uppercase">Horas</div>
+        </div>
+        <div>
+          <div className="text-3xl font-bold text-primary">{timeLeft.minutes}</div>
+          <div className="text-xs text-muted-foreground uppercase">Minutos</div>
+        </div>
+        <div>
+          <div className="text-3xl font-bold text-primary">{timeLeft.seconds}</div>
+          <div className="text-xs text-muted-foreground uppercase">Segundos</div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+
+// Componente para o divisor romântico (mantido do seu código)
 function RomanticDivider() {
   return (
     <div className="flex items-center justify-center gap-4 my-8">
@@ -17,16 +81,13 @@ function RomanticDivider() {
 }
 
 export function MainContent() {
-  // Estados para a contagem
+  // Estados para a contagem (mantidos do seu código)
   const [years, setYears] = useState(0)
   const [months, setMonths] = useState(0)
   const [days, setDays] = useState(0)
   const [hours, setHours] = useState(0)
   const [minutes, setMinutes] = useState(0)
   const [seconds, setSeconds] = useState(0)
-
-  // --- 1. NOVO ESTADO PARA O TEMA DINÂMICO ---
-  const [timeOfDayTheme, setTimeOfDayTheme] = useState("theme-night") // Padrão é noite
 
   useEffect(() => {
     const startDate = new Date("2025-06-12T00:00:00")
@@ -35,7 +96,7 @@ export function MainContent() {
       const now = new Date()
       const diff = now.getTime() - startDate.getTime()
 
-      // Lógica da contagem (Anos, Meses, Dias, etc.)
+      // Lógica da contagem (mantida do seu código)
       const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
       const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))
       const s = Math.floor((diff % (1000 * 60)) / 1000)
@@ -56,16 +117,6 @@ export function MainContent() {
       setYears(yearCount < 0 ? 0 : yearCount)
       setMonths(monthCount < 0 ? 0 : monthCount)
       setDays(dayCount < 0 ? 0 : dayCount)
-
-      // --- 2. LÓGICA PARA DEFINIR O TEMA DO FUNDO ---
-      const currentHour = now.getHours();
-      if (currentHour >= 5 && currentHour < 12) {
-        setTimeOfDayTheme("theme-morning"); // Manhã
-      } else if (currentHour >= 12 && currentHour < 18) {
-        setTimeOfDayTheme("theme-afternoon"); // Tarde
-      } else {
-        setTimeOfDayTheme("theme-night"); // Noite
-      }
     }
 
     updateCounter()
@@ -74,9 +125,9 @@ export function MainContent() {
     return () => clearInterval(interval)
   }, [])
 
+  // Removi a lógica do tema dinâmico para simplificar, já que não foi solicitada agora.
   return (
-    // --- 3. APLICANDO A CLASSE DINÂMICA AO FUNDO ---
-    <div className={`min-h-screen bg-background transition-colors duration-1000 ${timeOfDayTheme}`}>
+    <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-12 md:py-20 space-y-12 max-w-7xl">
         <div className="text-center space-y-4 md:space-y-6 animate-fade-in">
           <h1 className="text-5xl md:text-8xl font-serif text-balance text-foreground tracking-tight">
@@ -90,6 +141,7 @@ export function MainContent() {
         <div className="animate-fade-in-up">
             <h2 className="text-2xl font-serif text-center text-foreground/80 mb-8">Nosso Tempo Juntos</h2>
             <div className="grid grid-cols-3 md:grid-cols-6 gap-4 md:gap-6 max-w-4xl mx-auto">
+                {/* Cards de contagem (mantidos do seu código) */}
                 <div className="bg-card/80 backdrop-blur-sm rounded-lg p-4 md:p-6 shadow-sm border border-border/50 text-center">
                     <div className="text-4xl md:text-6xl font-serif text-primary mb-2">{years}</div>
                     <div className="text-xs text-muted-foreground uppercase tracking-widest">Anos</div>
@@ -123,6 +175,7 @@ export function MainContent() {
           className="flex flex-col lg:flex-row gap-8 lg:gap-16 items-start animate-fade-in-up"
           style={{ animationDelay: "0.2s" }}
         >
+          {/* Seção "Nossa História" (mantida do seu código) */}
           <div className="w-full lg:w-1/2 bg-card rounded-lg p-8 md:p-10 shadow-sm border border-border">
             <h2 className="text-3xl md:text-4xl font-serif text-foreground mb-6 md:mb-8 text-center lg:text-left tracking-tight">
               Nossa História
@@ -161,8 +214,16 @@ export function MainContent() {
           </div>
         </div>
 
-        <div className="animate-fade-in-up" style={{ animationDelay: "0.4s" }}>
-          <Calendar />
+        {/* --- 2. LAYOUT ATUALIZADO PARA O CALENDÁRIO E O CONTADOR --- */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center animate-fade-in-up" style={{ animationDelay: "0.4s" }}>
+          {/* Coluna do Calendário */}
+          <div>
+            <Calendar />
+          </div>
+          {/* Coluna do Contador Regressivo */}
+          <div className="w-full">
+            <CountdownCard />
+          </div>
         </div>
       </div>
     </div>
